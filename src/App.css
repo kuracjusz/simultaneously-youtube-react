@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  margin-top: 30px;
+  margin-top: 40px;
 }
 
 .oneVideo {
@@ -11,10 +11,21 @@
   margin-left: auto;
   margin-right: auto;
   width: 70%;
-  margin-bottom: 50px;
+  margin-bottom: 45px;
 }
 
 .allVideos {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.playPauseButton {
+  margin-right: 10px;
+}
+
+.progressBar {
+  margin-top: 15px;
+  width: 450px;
   margin-left: auto;
   margin-right: auto;
 }

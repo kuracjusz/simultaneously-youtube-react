@@ -3,16 +3,36 @@ import './App.css';
 
 import AllVideos from './components/AllVideos';
 import InputBar from './components/InputBar';
-import ControlPanel from './components/ControlPanel';
 
 
 class App extends Component {
+ 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      id: '',
+      videos: ["A3ypbwS_eY4", "VWoUcB7y4hw"],
+      isPlayClicked: true
+    };
+  }
+
+  videoAdd(id) {
+    this.setState({
+      id: id,
+      videos: this.state.videos.concat(id)
+    });
+  }
+
   render() {
     return (
       <div className="container App">
-        <InputBar />
-        <AllVideos />
-        <ControlPanel />
+        <InputBar onIdChange={(id) => this.videoAdd(id)}/>
+        <AllVideos 
+          videoID={this.state.id} 
+          videos={this.state.videos}
+          isPlayClicked={this.state.isPlayClicked}
+          isPlay={play => this.setState({isPlayClicked: play})} />
       </div>
     );
   }
