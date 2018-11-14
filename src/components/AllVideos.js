@@ -11,53 +11,55 @@ export default class AllVideos extends Component {
     
         this.state = {
           playing: false,
-          position: 0,
-          duration: 0
+          position: props.progress,
+          videosDuration: []
         }
+        console.log(props.progress);
 
-        this.handleOnReady = this.handleOnReady.bind(this);
+        // this.handleOnReady = this.handleOnReady.bind(this);
         this.setPosition = this.setPosition.bind(this);
     }
 
-    onStateChange = (play) => {
-        this.setState({playing: play});
-    }
+    // onStateChange = (play) => {
+    //     this.setState({playing: play});
+    // }
 
     togglePlay = () => {
         this.setState({playing: !this.state.playing});
-        this.setState(state => ({
-            playing: !this.state.playing
-          }));
-    }
-    
-    handleOnReady({ duration }) {
-        this.setState({duration});
+        // this.setState(state => ({
+        //     playing: !this.state.playing
+        //   }));
     }
 
     setPosition(position) {
         this.setState({position});
     }
 
+    componentDidMount() {
+        if(this.props.progress) {
+            this.setState({position: this.props.progress});
+        }
+    }
+
     render() {
+        console.log(this.state.position)
+        const maxDuration = Math.max(...this.state.videosDuration);
         return (
             <div>
                 <div className="row d-flex justify-content-center allVideos">
-                    {/* <YouTubeVideo className="col" Id="A3ypbwS_eY4" /> */}
-                    {/* <YouTubeVideo className="col" Id="CC5ca6Hsb2Q" />
-                    <YouTubeVideo className="col" Id="NlXTv5Ondgs" />
-                    <YouTubeVideo className="col" Id="VWoUcB7y4hw" /> */}
-                    {this.props.videos.map((video, key) => {
+                    {this.props.videos.map((video, index) => {
                         return (
                             <YouTubeOneVideo 
                                 className="col" 
                                 Id={video} 
-                                key={key} 
-                                isPlay={play => this.onStateChange(play)}
+                                key={index}
+                                // id={index} 
+                                // isPlay={play => this.onStateChange(play)}
                                 value={this.state.playing}
-                                grabPosition={play => this.setState({position: play})}
-                                grabDuration={play => this.setState({duration: play})}
-                                position={this.state.position}
-                                duration={this.state.duration} />
+                                sendPosition={this.state.position}
+                                // grabPosition={play => this.setState({position: play})}
+                                grabDuration={duration => this.setState({duration: this.state.videosDuration.push(duration)})}
+                            />
                         );
                     })}
                 </div>
@@ -68,10 +70,11 @@ export default class AllVideos extends Component {
                 <div className="progressBar">
                     <Slider
                         range={false}
-                        max={this.state.duration}
+                        max={maxDuration}
                         value={this.state.position}
-                        onChange={position => { this.state.duration && this.setPosition(position) }}
-                        onRangeClick={position => { this.state.duration && this.setPosition(position) }} />
+                        onChange={position => { this.setPosition(position) }}
+                        // onRangeClick={position => { this.setPosition(position) }} 
+                        />
                 </div>
             </div>
         );

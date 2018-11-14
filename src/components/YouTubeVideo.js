@@ -14,46 +14,51 @@ export default class YouTubeOneVideo extends Component {
           playing: this.props.value,
           currentVideo: 0,
           position: this.props.position,
-          duration: this.props.duration
+          duration: this.props.duration,
         };
 
-        this.onPlayingChange = this.onPlayingChange.bind(this);
+        // this.onPlayingChange = this.onPlayingChange.bind(this);
         this.handleOnReady = this.handleOnReady.bind(this);
         this.setPosition = this.setPosition.bind(this);
     }
 
-
-    onPlayingChange = (playing) => {
-        this.setState({playing});
-        this.props.isPlay(this.state.playing);
-    }
+    // onPlayingChange = (playing) => {
+        // console.log(playing);
+        // this.setState({playing});
+    // }
 
     handleOnReady({ duration }) {
         this.setState({duration});
-        // this.props.grabDuration(this.state.duration);
+        this.props.grabDuration(this.state.duration);
     }
 
     setPosition(position) {
         this.setState({position});
-        // this.props.grabPosition(this.state.position);
+    }
+
+    checkDuration() {
+        if(this.state.position >= this.state.duration) {
+            this.setPosition(this.state.position - this.state.duration)
+        }
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({playing: nextProps.value});
-        // this.setState({position: nextProps.position});
-        // this.setState({duration: nextProps.duration});
+        this.setState({position: nextProps.sendPosition}, () => this.checkDuration());
     }
 
 
     render() {
+        const play = this.props.value;
+        
         return (
             <div className="oneVideo">
                 <YouTubeVideo
                     position={this.state.position}
                     videoId={this.props.Id}
-                    playing={this.state.playing}
+                    playing={play}
                     volume={this.state.volume}
-                    shouldPrestart={true}
+                    shouldPrestart={false}
                     width= "320"
                     height= "195"
                     playerVars={{
@@ -66,17 +71,17 @@ export default class YouTubeOneVideo extends Component {
                         autohide: 2,
                       }}
                     
-                    onPlayingChange={this.onPlayingChange}
+                    // onPlayingChange={this.onPlayingChange}
                     onReady={this.handleOnReady}
                     onProgress={this.setPosition}
                     onVolumeChange={this.handleVolumeChange}>
                 </YouTubeVideo>
-                    <Slider 
-                        range={false}
-                        max={this.state.duration}
-                        value={this.state.position}
-                        onChange={position => { this.state.duration && this.setPosition(position) }}
-                        onRangeClick={position => { this.state.duration && this.setPosition(position) }} />
+                <Slider 
+                    range={false}
+                    max={this.state.duration}
+                    value={this.state.position}
+                    onChange={position => { this.state.duration && this.setPosition(position) }}
+                    onRangeClick={position => { this.state.duration && this.setPosition(position) }} />
             </div>
         );
     }
